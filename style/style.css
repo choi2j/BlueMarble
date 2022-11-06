@@ -1,0 +1,29 @@
+@font-face {
+	font-family: Atari;
+	src: url("font/ATARCC__.TTF");
+}
+
+* {
+	margin: 0;
+	padding: 0;
+	text-decoration: none;
+	font-family: Atari;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+}
+
+canvas {
+    display: block;
+	background: none;
+	background-image: none;
+}
+
+#main {
+    width: 100%;
+    height: 100%;
+	background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 1));
+}
