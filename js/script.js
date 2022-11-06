@@ -59,7 +59,7 @@ class Player {
 
 		// Player Defaults
 		this.dy = 0; // direction Y > y 좌표 이동 계산
-		this.jumpForce = 12; // 점프 강도 계산
+		this.jumpForce = 15; // 점프 강도 계산
 		this.jumpTimer = 0; // 점프 타이머 > 점프한 시간 계산
 		this.originalHeight = h; // 원래 높이
 		this.grounded = true; // 땅에 있는지 판단
@@ -97,7 +97,7 @@ class Player {
 			this.jumpTimer = 0;
 		}
 
-		if ((keys["ShiftLeft"] || keys["KeyS"])) {
+		if (keys["ShiftLeft"] || keys["KeyS"]) {
 			// 왼쉬프트 or 키보드 S 입력시
 			this.y += this.h / 2;
 			this.h = this.originalHeight / 2; //h를 절반으로 줄여서 숙인 것과 같은 효과
@@ -232,33 +232,33 @@ function reset() {
 function randomSet(val) {
 	switch (val) {
 		case 0:
-			gravity = 1;
-			gameSpeed = 5;
+			gravity = 1.5;
+			gameSpeed = 9;
 			initialSpawnTimer = 250;
 			break;
 		case 1:
-			gravity = 1.2;
-			gameSpeed = 7;
+			gravity = 1.75;
+			gameSpeed = 11;
 			initialSpawnTimer = 220;
 			break;
 		case 2:
-			gravity = 1.4;
-			gameSpeed = 9;
+			gravity = 1.9;
+			gameSpeed = 13;
 			initialSpawnTimer = 190;
 			break;
 		case 3:
-			gravity = 1.6;
-			gameSpeed = 11;
+			gravity = 2.25;
+			gameSpeed = 15;
 			initialSpawnTimer = 160;
 			break;
 		case 4:
-			gravity = 2;
-			gameSpeed = 13;
+			gravity = 2.5;
+			gameSpeed = 17;
 			initialSpawnTimer = 130;
 			break;
 		case 5:
 			gravity = 3;
-			gameSpeed = 15;
+			gameSpeed = 19;
 			initialSpawnTimer = 100;
 			break;
 		default:
@@ -271,13 +271,13 @@ function randomSet(val) {
 }
 
 function spawnObstacle() {
-	let size = randomNum(60, 80);
+	let size = randomNum(50, 100);
 	let type = randomNum(0, 1);
 	let obstacle = new Obstacle(canvas.width + size, canvas.height - size, size, size, "#2484E4");
 
 	if (type == 1) {
 		obstacle.isFly = true;
-		obstacle.y -= player.originalHeight - 10;
+		obstacle.y -= player.originalHeight - randomNum(1, 10);
 	}
 	obstacles.push(obstacle);
 }
@@ -298,7 +298,7 @@ function Start() {
 		highscore = localStorage.getItem("highscore");
 	}
 
-	player = new Player(25, canvas.height - 150, 100, 100, "pink");
+	player = new Player(25, canvas.height - 130, 130, 130, "pink");
 
 	scoreText = new Text("Score: " + score, 25, 25, "left", "#212121", "20");
 
@@ -312,21 +312,9 @@ function Start() {
 function Update() {
 	requestAnimationFrame(Update);
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
+	ctx.globalAlpha = 0.6;
 	ctx.drawImage(imgBG, 0, 0, canvas.width, canvas.height);
-	ctx.save();
-
-	const gradient = ctx.createLinearGradient(0, 0, canvas.width, 300);
-
-	// Add three color stops
-	gradient.addColorStop(0, "rgba(0, 0, 0, 0.2)");
-	gradient.addColorStop(0, "rgba(0, 0, 0, 0.5)");
-
-	// Set the fill style and draw a rectangle
-	ctx.fillStyle = gradient;
-	ctx.fillRect(0, canvas.height - 300, canvas.width, 300);
-
-	// Restore the default state
-	ctx.restore();
+	ctx.globalAlpha = 1;
 
 	ctx.drawImage(diceImg, canvas.width / 2 - 25, 25, 100, 100);
 
@@ -364,7 +352,7 @@ function Update() {
 		let diceval = (val % 6) + 1;
 		diceText.t = "Dice: " + diceval;
 		dice = diceval;
-		getImg(score / 500);
+		getImg((score / 500) + val * (val + 1));
 	}
 
 	diceText.Draw();
