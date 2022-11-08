@@ -33,6 +33,11 @@ let gameSpeed;
 let keys = {};
 let isStart = false;
 let imgBG = new Image();
+var sound = new Audio();
+sound.src = "./diceSound.mp3";
+
+var rickroll = new Audio();
+rickroll.src = "./rickrollSound.mp3";
 
 // ------------------------------------------------------------------------------------------------------------
 
@@ -178,10 +183,6 @@ class Text {
 
 // ------------------------------------------------------------------------------------------------------------
 
-// API
-let apiKeys = [];
-let currentApi;
-
 // getJSON : get JSON from URL
 const getJSON = function (url, callback) {
 	const xhr = new XMLHttpRequest();
@@ -304,7 +305,7 @@ function Start() {
 
 	highscoreText = new Text("HighScore: " + highscore, canvas.width - 25, 25, "right", "#212121", "20");
 
-	diceText = new Text("Dice: " + dice, canvas.width / 2 - 40, 150, "left", "#212121", "20");
+	diceText = new Text("Dice: " + dice, canvas.width / 2 - 40, 250, "left", "#212121", "20");
 
 	requestAnimationFrame(Update);
 }
@@ -312,11 +313,11 @@ function Start() {
 function Update() {
 	requestAnimationFrame(Update);
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
-	ctx.globalAlpha = 0.6;
+	ctx.globalAlpha = 0.5;
 	ctx.drawImage(imgBG, 0, 0, canvas.width, canvas.height);
 	ctx.globalAlpha = 1;
 
-	ctx.drawImage(diceImg, canvas.width / 2 - 25, 25, 100, 100);
+	ctx.drawImage(diceImg, canvas.width / 2 - 50, 50, 150, 150);
 
 	player.Animate(); //공룡한테 애니메이션 주는 함수 <-여기서 그려줄거임
 
@@ -347,12 +348,24 @@ function Update() {
 	}
 
 	if (score % 500 == 0) {
-		let val = randomNum(1, 6);
-		randomSet(val % 6);
-		let diceval = (val % 6) + 1;
-		diceText.t = "Dice: " + diceval;
-		dice = diceval;
-		getImg((score / 500) + val * (val + 1));
+		let val = randomNum(1, 66);
+		if (val != 66) {
+			randomSet(val % 6);
+			let diceval = (val % 6) + 1;
+			diceText.t = "Dice: " + diceval;
+			dice = diceval;
+			sound.play();
+			getImg(score / 500 + val * (val + 1));
+		} else {
+			gravity = 5;
+			gameSpeed = 25;
+			initialSpawnTimer = 70;
+			imgBG.src = "./img/rickroll.webp";
+			let diceval = (val % 6) + 1;
+			diceText.t = "Dice: " + "rickroll";
+			dice = diceval;
+			rickroll.play();
+		}
 	}
 
 	diceText.Draw();
